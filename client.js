@@ -50,7 +50,11 @@ const Gameboard = function () {
         if (winner != " ") {
             console.log(`The game has ended! Winner: ${winner}`);
         }
+        else if (board.flat().every(cell => cell != " ")) {
+            console.log("The game ended in a draw");
+        }
         else {
+
             console.log(`Game in progress...`);
         }
 
@@ -59,3 +63,15 @@ const Gameboard = function () {
 
     return { getBoard, updateBoard, checkState };
 }();
+
+const Player = function (marker) {
+    const getMarker = function () {
+        return marker;
+    }
+
+    const makeMove = function (x, y, board) {
+        board.updateBoard(x, y, marker);
+    }
+
+    return { getMarker, makeMove };
+}

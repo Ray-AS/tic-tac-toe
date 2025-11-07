@@ -42,7 +42,7 @@ const Gameboard = function () {
             let cellB = board[b[1]][b[0]];
             let cellC = board[c[1]][c[0]];
 
-            if (cellA === cellB === cellC && cellA != " ") {
+            if (cellA === cellB && cellB === cellC && cellA != " ") {
                 winner = cellA;
             }
         });
@@ -56,4 +56,6 @@ const Gameboard = function () {
 
         return winner;
     }
+
+    return { getBoard, updateBoard, checkState };
 }();

@@ -26,11 +26,9 @@ const Gameboard = function () {
     const updateBoard = function (x, y, value) {
         if (board[y][x] == " ") {
             board[y][x] = value;
-            console.log(`${value} placed at position (${x}, ${y})`);
             return true;
         }
         else {
-            console.log("Position already occupied");
             return false;
         }
     };
@@ -49,16 +47,8 @@ const Gameboard = function () {
             }
         });
 
-        if (winner != " ") {
-            console.log(`The game has ended! Winner: ${winner}`);
-        }
-        else if (board.flat().every(cell => cell != " ")) {
-            console.log("The game ended in a draw");
+        if (board.flat().every(cell => cell != " ")) {
             winner = "D";
-        }
-        else {
-
-            console.log(`Game in progress...`);
         }
 
         return winner;
@@ -79,48 +69,70 @@ const Player = function (marker) {
     return { getMarker, makeMove };
 }
 
-const TicTacToe = function () {
-    const gameboard = Gameboard;
-    const p1 = Player("X");
-    const p2 = Player("O");
-    let turn = 0;
-
-    const playGame = function () {
-        while (gameboard.checkState() === " ") {
-            console.log(gameboard.getBoard());
-            if (turn % 2 == 0) {
-                console.log(`Player ${p1.getMarker()}'s turn.`);
-
-                let result = false;
-
-                while (!result) {
-                    let x = parseInt(prompt("Choose column: "));
-                    let y = parseInt(prompt("Choose row: "));
-
-                    result = p1.makeMove(x, y, gameboard);
-                }
-
-                turn += 1;
-            }
-            else {
-                console.log(`Player ${p2.getMarker()}'s turn.`);
-
-                let result = false;
-
-                while (!result) {
-                    let x = parseInt(prompt("Choose column: "));
-                    let y = parseInt(prompt("Choose row: "));
-
-                    result = p2.makeMove(x, y, gameboard);
-                }
-
-                turn += 1;
-            }
-        }
+const DisplayController = function () {
+    const displayBoard = function (board) {
+        console.log(board.getBoard());
     };
 
-    return { playGame }
+    const displayMessage = function (message) {
+        console.log(message);
+    };
+
+    const getValues = function () {
+        let x = parseInt(prompt("Enter column: "));
+        let y = parseInt(prompt("Enter row: "));
+
+        return { x, y };
+    }; 0
+
+    return { displayBoard, displayMessage, getValues };
+}();
+
+const Game = function () {
+    const board = Gameboard;
+    const display = DisplayController;
+    const p1 = new Player("X");
+    const p2 = new Player("O");
+    let currentPlayer = [p1, p2][Math.floor(Math.random() * 2)];
+
+    const playTurn = function (player) {
+        display.displayBoard(board);
+
+        let result;
+        let x, y;
+
+        do {
+            ({ x, y } = display.getValues());
+            result = player.makeMove(x, y, board);
+
+            if (!result) display.displayMessage(`Position (${x},${y}) already occupied.`);
+        } while (!result);
+
+        display.displayMessage(`${player.getMarker()} placed at position (${x}, ${y})`);
+    };
+
+    const playGame = function () {
+        let state;
+
+        do {
+            currentPlayer = currentPlayer === p1 ? p2 : p1;
+            playTurn(currentPlayer);
+
+            state = board.checkState();
+
+            if (state === "D") {
+                display.displayMessage("The game ended in a draw");
+                return;
+            }
+            else if (state === " ") display.displayMessage("Game in progress...");
+        } while (state === " ");
+
+        display.displayMessage(`The game has ended! Winner: ${currentPlayer.getMarker()}`);
+    };
+
+    return { playGame };
 };
 
-const game = TicTacToe();
-game.playGame();
+const tictactoe = new Game();
+
+tictactoe.playGame();

@@ -135,4 +135,4 @@ const Game = function () {
 
 const tictactoe = new Game();
 
-tictactoe.playGame();
+// tictactoe.playGame();

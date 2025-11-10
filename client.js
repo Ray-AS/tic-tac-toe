@@ -23,9 +23,9 @@ const Gameboard = function () {
         return board;
     };
 
-    const updateBoard = function (x, y, value) {
-        if (board[y][x] == " ") {
-            board[y][x] = value;
+    const updateBoard = function (row, col, value) {
+        if (board[row][col] == " ") {
+            board[row][col] = value;
             return true;
         }
         else {
@@ -54,80 +54,105 @@ const Gameboard = function () {
         return winner;
     };
 
-    return { getBoard, updateBoard, checkState };
+    const resetBoard = function () {
+        board = [
+            [" ", " ", " "],
+            [" ", " ", " "],
+            [" ", " ", " "],
+        ];
+    }
+
+    return { getBoard, updateBoard, checkState, resetBoard };
 }();
 
-const Player = function (marker) {
+const Player = function (name, marker) {
+    const getName = function () {
+        return name;
+    }
+
     const getMarker = function () {
         return marker;
     };
 
-    const makeMove = function (x, y, board) {
-        return board.updateBoard(x, y, marker);
+    const makeMove = function (row, col, board) {
+        return board.updateBoard(row, col, marker);
     };
 
-    return { getMarker, makeMove };
+    return { getName, getMarker, makeMove };
 }
 
 const DisplayController = function () {
-    const displayBoard = function (board) {
-        console.log(board.getBoard());
+    const createBoard = function (board, callback) {
+        const container = document.getElementById("board");
+        for (let row = 0; row < board.length; row++) {
+            for (let col = 0; col < board[row].length; col++) {
+                const cell = document.createElement("div");
+                cell.classList += "cell";
+                cell.textContent = board[row][col];
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+
+                cell.addEventListener("click", callback);
+
+                container.appendChild(cell);
+            }
+        }
+    };
+
+    const updateBoard = function (board) {
+        const cells = document.querySelectorAll(".cell");
+        let currentBoard = board.flat();
+
+        cells.forEach((cell, index) => {
+            cell.textContent = currentBoard[index];
+        })
     };
 
     const displayMessage = function (message) {
-        console.log(message);
+        document.getElementById("message").textContent = message;
     };
 
-    const getValues = function () {
-        let x = parseInt(prompt("Enter column: "));
-        let y = parseInt(prompt("Enter row: "));
-
-        return { x, y };
-    }; 0
-
-    return { displayBoard, displayMessage, getValues };
+    return { createBoard, updateBoard, displayMessage };
 }();
 
 const Game = function () {
     const board = Gameboard;
     const display = DisplayController;
-    const p1 = new Player("X");
-    const p2 = new Player("O");
+    const p1 = new Player("Player 1", "X");
+    const p2 = new Player("Player 2", "O");
     let currentPlayer = [p1, p2][Math.floor(Math.random() * 2)];
 
-    const playTurn = function (player) {
-        display.displayBoard(board);
+    const resetGame = function () {
+        board.resetBoard();
+        display.updateBoard(board.getBoard());
+        display.displayMessage("");
+    };
 
-        let result;
-        let x, y;
+    const playTurn = function (event) {
+        const cell = event.currentTarget;
+        const row = cell.dataset.row;
+        const col = cell.dataset.col;
 
-        do {
-            ({ x, y } = display.getValues());
-            result = player.makeMove(x, y, board);
+        currentPlayer.makeMove(row, col, board);
 
-            if (!result) display.displayMessage(`Position (${x},${y}) already occupied.`);
-        } while (!result);
+        display.updateBoard(board.getBoard());
 
-        display.displayMessage(`${player.getMarker()} placed at position (${x}, ${y})`);
+        state = board.checkState()
+
+        if (state === "D") {
+            display.displayMessage("The game ended in a draw");
+            resetGame();
+        }
+        else if (state != " ") {
+            display.displayMessage(`The game has ended! Winner: ${currentPlayer.getName()}`);
+            resetGame();
+        }
+
+        currentPlayer = currentPlayer === p1 ? p2 : p1;
     };
 
     const playGame = function () {
-        let state;
-
-        do {
-            currentPlayer = currentPlayer === p1 ? p2 : p1;
-            playTurn(currentPlayer);
-
-            state = board.checkState();
-
-            if (state === "D") {
-                display.displayMessage("The game ended in a draw");
-                return;
-            }
-            else if (state === " ") display.displayMessage("Game in progress...");
-        } while (state === " ");
-
-        display.displayMessage(`The game has ended! Winner: ${currentPlayer.getMarker()}`);
+        display.createBoard(board.getBoard(), playTurn)
     };
 
     return { playGame };
@@ -135,4 +160,4 @@ const Game = function () {
 
 const tictactoe = new Game();
 
-// tictactoe.playGame();
+tictactoe.playGame();

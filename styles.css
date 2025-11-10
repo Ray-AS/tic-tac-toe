@@ -22,7 +22,7 @@ body {
     font-family: 'Courier New', Courier, monospace;
 }
 
-.board {
+#board {
     width: fit-content;
     background-color: rgb(255, 167, 167);
     display: grid;
@@ -45,6 +45,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .cell:hover {
@@ -53,4 +54,10 @@ body {
 
 .cell:active {
     transform: scale(0.95);
+}
+
+#message {
+    font-size: 40px;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
 }

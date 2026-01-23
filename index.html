@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,18 +8,11 @@
   </head>
   <body>
     <div class="title">Tic-Tac-Toe</div>
-    <div id="board">
-      <!-- <div class="cell">X</div>
-      <div class="cell">O</div>
-      <div class="cell">X</div>
-      <div class="cell">O</div>
-      <div class="cell">X</div>
-      <div class="cell">O</div>
-      <div class="cell">X</div>
-      <div class="cell">X</div>
-      <div class="cell">O</div> -->
-    </div>
-    <div id="message"></div>
+    <div id="turn" class="turn-indicator">Current Turn: Player 1</div>
+    <div id="board"></div>
+    <div id="message" class="message"></div>
+    <div id="score" class="score">Player 1: 0 | Player 2: 0 | Draws: 0</div>
+    <button id="reset" class="reset-btn">New Game</button>
     <script src="client.js"></script>
   </body>
 </html>

@@ -115,10 +115,11 @@ const Player = function (name, marker) {
 const DisplayController = (function () {
   const createBoard = function (board, callback) {
     const container = document.getElementById("board");
+    container.innerHTML = "";
     for (let row = 0; row < board.length; row++) {
       for (let col = 0; col < board[row].length; col++) {
         const cell = document.createElement("div");
-        cell.classList += "cell";
+        cell.classList.add("cell");
         cell.textContent = board[row][col];
         cell.dataset.row = row;
         cell.dataset.col = col;

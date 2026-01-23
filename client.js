@@ -144,7 +144,16 @@ const DisplayController = (function () {
     document.getElementById("message").textContent = message;
   };
 
-  return { createBoard, updateBoard, displayMessage };
+  const displayTurn = function (playerName) {
+    document.getElementById("turn").textContent = `Current Turn: ${playerName}`;
+  };
+
+  const updateScore = function (p1Wins, p2Wins, draws) {
+    document.getElementById("score").textContent =
+      `Player 1: ${p1Wins} | Player 2: ${p2Wins} | Draws: ${draws}`;
+  };
+
+  return { createBoard, updateBoard, displayMessage, displayTurn, updateScore };
 })();
 
 const Game = function () {

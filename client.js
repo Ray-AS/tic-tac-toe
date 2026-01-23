@@ -162,11 +162,18 @@ const Game = function () {
   const p1 = new Player("Player 1", "X");
   const p2 = new Player("Player 2", "O");
   let currentPlayer = [p1, p2][Math.floor(Math.random() * 2)];
+  let gameActive = true;
+  let scores = { p1: 0, p2: 0, draws: 0 };
 
   const resetGame = function () {
-    board.resetBoard();
-    display.updateBoard(board.getBoard());
-    display.displayMessage("");
+    setTimeout(() => {
+      board.resetBoard();
+      display.updateBoard(board.getBoard());
+      display.displayMessage("");
+      currentPlayer = [p1, p2][Math.floor(Math.random() * 2)];
+      display.displayTurn(currentPlayer.getName());
+      gameActive = true;
+    }, 2000);
   };
 
   const playTurn = function (event) {

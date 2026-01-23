@@ -215,6 +215,18 @@ const Game = function () {
 
   const playGame = function () {
     display.createBoard(board.getBoard(), playTurn);
+    display.displayTurn(currentPlayer.getName());
+    display.updateScore(scores.p1, scores.p2, scores.draws);
+
+    const resetButton = document.getElementById("reset");
+    resetButton.addEventListener("click", () => {
+      board.resetBoard();
+      display.createBoard(board.getBoard(), playTurn);
+      display.displayMessage("");
+      currentPlayer = [p1, p2][Math.floor(Math.random() * 2)];
+      display.displayTurn(currentPlayer.getName());
+      gameActive = true;
+    });
   };
 
   return { playGame };

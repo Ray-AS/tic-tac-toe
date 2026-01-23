@@ -13,6 +13,10 @@ A clean, browser-based Tic-Tac-Toe game built with vanilla JavaScript.
 
 ## How to Play
 
+### Live
+
+[Preview](https://ray-as.github.io/tic-tac-toe/)
+
 ### Local
 
 1. Execute `git clone <git@github.com>:Ray-AS/tic-tac-toe.git` in desired folder to download project

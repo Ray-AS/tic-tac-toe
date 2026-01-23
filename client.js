@@ -177,27 +177,40 @@ const Game = function () {
   };
 
   const playTurn = function (event) {
+    if (!gameActive) return;
+
     const cell = event.currentTarget;
     const row = cell.dataset.row;
     const col = cell.dataset.col;
 
-    currentPlayer.makeMove(row, col, board);
+    const moveSuccessful = currentPlayer.makeMove(row, col, board);
+
+    if (!moveSuccessful) return;
 
     display.updateBoard(board.getBoard());
 
-    state = board.checkState();
+    const state = board.checkState();
 
     if (state === "D") {
-      display.displayMessage("The game ended in a draw");
+      scores.draws++;
+      display.updateScore(scores.p1, scores.p2, scores.draws);
+      display.displayMessage("It's a Draw!");
+      gameActive = false;
       resetGame();
     } else if (state != " ") {
-      display.displayMessage(
-        `The game has ended! Winner: ${currentPlayer.getName()}`,
-      );
+      if (currentPlayer === p1) {
+        scores.p1++;
+      } else {
+        scores.p2++;
+      }
+      display.updateScore(scores.p1, scores.p2, scores.draws);
+      display.displayMessage(`${currentPlayer.getName()} Wins!`);
+      gameActive = false;
       resetGame();
+    } else {
+      currentPlayer = currentPlayer === p1 ? p2 : p1;
+      display.displayTurn(currentPlayer.getName());
     }
-
-    currentPlayer = currentPlayer === p1 ? p2 : p1;
   };
 
   const playGame = function () {

@@ -2,6 +2,8 @@
 
 A clean, browser-based Tic-Tac-Toe game built with vanilla JavaScript.
 
+![Tic-tac-toe Screenshot](./example.png)
+
 ## Features
 
 - Two-player gameplay
